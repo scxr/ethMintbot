@@ -105,6 +105,8 @@ class FundSplitter:
         elif todo == 2:
             self.setup_splitter()
             self.split()
+        elif todo ==3:
+            self.checkForNFT()
         else:
             print("Invalid option supplied")
             quit()
@@ -138,7 +140,7 @@ class FundSplitter:
     def split(self) -> bool:
         """Main split function
         """
-        _type = int(input("To generate x random wallets to split to enter (1)\nTo supply wallets enter (2)\nChoice: "))
+        _type = int(input("To generate x random wallets to split to enter (1)\nTo supply wallets enter (2)\nTo check for NFTs in privkeys enter (3)\nChoice: "))
         if _type == 1:
             self.amnt_split = int(input("Enter amount of wallets you want to split to: "))
             keys_split = self.generate_wallets()
@@ -203,10 +205,21 @@ class FundSplitter:
                 pub = self.w3.eth.account.privateKeyToAccount(i).address
                 bal = self.w3.eth.getBalance(pub)/1e18 # gives bal in wei so divide by 1*10**18 (1e18 shorthand)
                 print(f"{i} has a balance of {bal}eth")
+    def checkForNFT(self):
+        contract_address = input("Enter contract address to check for nft : ")
+        contract = self.w3.eth.contract(address=contract_address, abi=json.loads(open("erc721.json").read())) # initialise contract instance
+        private_keys = [i for i in open("fundedwalls.txt").read().split("\n") if len(i) > 30] # load priv keys from file ignoring blank lines
+        for i in private_keys:
+            acc = self.w3.eth.account.privateKeyToAccount(i)
+            bal = contract.functions.balanceOf(acc.address).call()
+            if (bal > 0):
+                print(f"{acc.address} owns {bal} of this nft")
+            else:
+                print(f"{acc.address} none found in this wallet")
 
 class Parent:
     def __init__(self) -> None:
-        todo = int(input("To start mintbot enter 1\nTo access funds menu enter 2\nChoice: "))
+        todo = int(input("To start mintbot enter 1\nTo access wallets menu enter 2\nChoice: "))
         if todo == 1:
             mintbot = MintBot()
             mintbot.mint()
