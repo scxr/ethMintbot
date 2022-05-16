@@ -99,7 +99,7 @@ class MintBot:
 class FundSplitter:
     def __init__(self) -> None:
         self.w3 = Web3(Web3.HTTPProvider("https://rinkeby.infura.io/v3/59ef45cbe2674f43a7672339c2e76a0f"))
-        todo = int(input("Funds Menu\nCheck balances of private keys you have supplied (1)\nSplit from supplied private key to generated wallets (2)\nChoice: "))
+        todo = int(input("Funds Menu\nCheck balances of private keys you have supplied (1)\nSplit from supplied private key to generated wallets (2)\nTo check for NFTs in privkeys enter (3)\nChoice: "))
         if todo == 1:
             self.checkPrivateKeyBals()
         elif todo == 2:
@@ -140,7 +140,7 @@ class FundSplitter:
     def split(self) -> bool:
         """Main split function
         """
-        _type = int(input("To generate x random wallets to split to enter (1)\nTo supply wallets enter (2)\nTo check for NFTs in privkeys enter (3)\nChoice: "))
+        _type = int(input("To generate x random wallets to split to enter (1)\nTo supply wallets enter (2)\nChoice: "))
         if _type == 1:
             self.amnt_split = int(input("Enter amount of wallets you want to split to: "))
             keys_split = self.generate_wallets()
